@@ -1,14 +1,26 @@
 "use client";
+
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { MdOutlineStorefront } from "react-icons/md";
 import { FiUsers } from "react-icons/fi";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineMail } from "react-icons/ai";
+import Link from "next/link";
+import { createClient } from "@/lib/client";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  const supabase = createClient();
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState("Admin");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [storeName, setStoreName] = useState("");
 
   const rolesType = [
     {
@@ -65,6 +77,50 @@ export default function SignUp() {
     </div>
   );
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    console.log("clicked");
+    e.preventDefault();
+    if (!email || !password || !confirmPassword) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (!email.includes("@")) {
+      toast.error("Enter a valid email");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    if (!storeName) {
+      toast.error("Store name reuired");
+      return;
+    }
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          role: selectedRole,
+          store_name: storeName,
+        },
+      },
+    });
+    if (error) {
+      toast.error(error.message);
+    }
+    toast.success("Signup successful 🎉");
+  
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+  };
+
   return (
     // left
     <div className="bg-green-50 min-h-screen w-full">
@@ -115,7 +171,7 @@ export default function SignUp() {
             <h1 className="font-bold mt-4 mb-4">Chosse account type</h1>
             {/* roles */}
             <div className="grid grid-cols-3 gap-4">
-              {rolesType.map(({ logo : Icon, role, Info }, idx) => (
+              {rolesType.map(({ logo: Icon, role, Info }, idx) => (
                 <div
                   key={idx}
                   onClick={() => setSelectedRole(role)}
@@ -128,11 +184,13 @@ export default function SignUp() {
                 </div>
               ))}
             </div>
-            <form action="">
+            <form onSubmit={handleSubmit}>
               <div className="">
                 <h1 className="mt-4 mb-2 font-bold">Email Address</h1>
                 <div className="relative w-full">
                   <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="Enter your email"
                     className="pl-2  py-3 w-full rounded-lg border border-gray-300 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -146,6 +204,8 @@ export default function SignUp() {
 
                 <div className="relative w-full">
                   <input
+                    value={storeName}
+                    onChange={(e) => setStoreName(e.target.value)}
                     type="name"
                     placeholder="Enter your store name"
                     className="pl-2 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -159,6 +219,8 @@ export default function SignUp() {
                   <h1 className="mt-4 mb-2">Password</h1>
                   <div className="relative w-full">
                     <input
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       type="password"
                       placeholder="Create Password"
                       className="pl-2 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -170,6 +232,8 @@ export default function SignUp() {
                   <h1 className="mt-4 mb-2">Confirm Password</h1>
                   <div className="relative w-full">
                     <input
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       type="password"
                       placeholder="Confirm Password"
                       className="pl-2 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -184,9 +248,7 @@ export default function SignUp() {
                   id="terms"
                   className="accent-blue-700 w-5 h-4"
                 />
-                <label htmlFor="terms">
-                  I agree to the terms & conditions.
-                </label>
+                <label htmlFor="terms">Remember me</label>
               </div>
               <button className="rounded-lg text-xl bg-blue-400 w-full mt-4 p-2 font-bold">
                 Create Account{" "}
@@ -197,6 +259,11 @@ export default function SignUp() {
               <span className="mx-4 text-gray-500 text-sm font-medium">OR</span>
               <div className="flex-grow h-px bg-gray-300"></div>
             </div>
+            <Link href="/login">
+              <p className=" text-black px-4 py-2 ">
+                Alredy have an account ? Go to login
+              </p>
+            </Link>
           </div>
         </div>
       </div>
