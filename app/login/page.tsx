@@ -3,10 +3,22 @@ import Image from "next/image";
 import { useState } from "react";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineMail } from "react-icons/ai";
+import Link from "next/link";
+import { createClient } from "@/lib/client";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const supabase = createClient();
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState("Admin");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const roles = ["Admin", "Seller", "User"];
+
+  const [loading, setLoading] = useState(false);
 
   const features = [
     {
@@ -44,6 +56,39 @@ export default function LoginPage() {
       <h3 className="text-gray-800">{title}</h3>
     </div>
   );
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setLoading(false);
+      toast.error(error.message);
+      return;
+    }
+    const userId = data?.user?.id;
+    if (!userId) return;
+
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (profileError) {
+      setLoading(false);
+      toast.error("Failed to get user role: " + profileError.message);
+      return;
+    }
+    toast.success("Successfully logged in 🎉");
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+  };
 
   return (
     <div className="bg-green-50 min-h-screen w-full">
@@ -105,11 +150,13 @@ export default function LoginPage() {
                 </button>
               ))}
             </div>
-            <form action="">
+            <form onSubmit={handleLogin}>
               <div className="">
                 <h1 className="mt-4 mb-2">Email Address</h1>
                 <div className="relative w-full">
                   <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="Enter your email"
                     className="pl-10 pr-4 py-3 w-full rounded-lg border border-gray-300 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -124,6 +171,8 @@ export default function LoginPage() {
                 </div>
                 <div className="relative w-full">
                   <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     type="password"
                     placeholder="**********"
                     className="pl-10 pr-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -140,6 +189,12 @@ export default function LoginPage() {
               <span className="mx-4 text-gray-500 text-sm font-medium">OR</span>
               <div className="flex-grow h-px bg-gray-300"></div>
             </div>
+            <Link href="/signup">
+              <p className=" text-black px-4 py-2 ">
+                Creata an account ?
+                <span className="text-green-500"> SignUp </span>
+              </p>
+            </Link>
           </div>
         </div>
       </div>
