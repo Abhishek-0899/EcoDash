@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import React, { useState } from "react";
 import { MdOutlineStorefront } from "react-icons/md";
@@ -97,8 +96,8 @@ export default function SignUp() {
       toast.error("Passwords do not match");
       return;
     }
-    if (!storeName) {
-      toast.error("Store name reuired");
+    if (!storeName && selectedRole === "Seller") {
+      toast.error("Store name required");
       return;
     }
     const { data, error } = await supabase.auth.signUp({
@@ -107,7 +106,7 @@ export default function SignUp() {
       options: {
         data: {
           role: selectedRole,
-          store_name: storeName,
+          ...(selectedRole === "Seller" && { store_name: storeName }),
         },
       },
     });
@@ -115,7 +114,22 @@ export default function SignUp() {
       toast.error(error.message);
     }
     toast.success("Signup successful 🎉");
-  
+
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+  };
+
+  const handleGoogle = async (e) => {
+    e.preventDefault();
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "https://uqezvcerovmpbpspxvns.supabase.co/auth/v1/callback",
+      },
+    });
+    toast.success("Signup successful 🎉");
+
     setTimeout(() => {
       router.push("/");
     }, 1000);
@@ -124,14 +138,15 @@ export default function SignUp() {
   return (
     // left
     <div className="bg-green-50 min-h-screen w-full">
-      <div className="flex items-center">
+      <div className="md:flex items-center p-4 hidden">
         <Image src="/logo.png" alt="Product Image" width={60} height={60} />
-        <h1>Ecodash Platform</h1>
+        <h1 className="ml-4 text-2xl font-bold">Ecodash Platform</h1>
       </div>
 
       {/* Main layout */}
-      <div className="flex flex-row min-h-screen">
-        <div className="w-[50%] bg-green-50 px-20 py-20">
+      <div className="flex md:flex-row flex-col min-h-screen">
+        {/* Left side (features) - hide on mobile */}
+        <div className="hidden md:flex w-1/2 bg-green-50 px-10 py-10 flex-col">
           <div className="">
             <h1 className="text-xl font-bold text-green-900 mt-2 mb-10 ">
               {" "}
@@ -156,21 +171,22 @@ export default function SignUp() {
           </div>
         </div>
 
-        {/* right */}
+        {/* Right side (Signup) */}
 
-        <div className="w-[50%] bg-green-100 flex justify-center items-center">
+        <div className="w-full md:w-1/2 bg-green-100 flex justify-center items-center p-6">
           {/* Signup  */}
 
-          <div className="rounded-2xl  translate-y-[-50px] shadow-2xl backdrop-blur-md bg-white/80 border border-white/40 flex flex-col p-5 max-w-xl mx-auto">
-            {" "}
+          <div className="rounded-2xl  md:-translate-y-30 translate-y-10  shadow-2xl backdrop-blur-md bg-white/80 border border-white/40 flex flex-col p-5 max-w-xl mx-auto">
             <h1 className="text-4xl font-bold mb-4">Sign Up</h1>
             <p>
               Choose your role, fill in your details and create your EcoDash
               account.
             </p>
-            <h1 className="font-bold mt-4 mb-4">Chosse account type</h1>
+            <h1 className="font-bold mt-4 mb-4">Choose account type</h1>
+            
             {/* roles */}
-            <div className="grid grid-cols-3 gap-4">
+
+            <div className="grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {rolesType.map(({ logo: Icon, role, Info }, idx) => (
                 <div
                   key={idx}
@@ -184,9 +200,12 @@ export default function SignUp() {
                 </div>
               ))}
             </div>
+
+            {/* Form */}
+
             <form onSubmit={handleSubmit}>
-              <div className="">
-                <h1 className="mt-4 mb-2 font-bold">Email Address</h1>
+              <div className="mb-4">
+                <h1 className="mt-4 block mb-2 font-bold">Email Address</h1>
                 <div className="relative w-full">
                   <input
                     value={email}
@@ -199,24 +218,28 @@ export default function SignUp() {
                 </div>
               </div>
 
-              <div className="mt-4">
-                <h1 className="mt-4 mb-2 font-bold">Store Name</h1>
+              {selectedRole === "Seller" ? (
+                <div className="mt-4">
+                  <h1 className="mt-4 mb-2 font-bold">Store Name</h1>
 
-                <div className="relative w-full">
-                  <input
-                    value={storeName}
-                    onChange={(e) => setStoreName(e.target.value)}
-                    type="name"
-                    placeholder="Enter your store name"
-                    className="pl-2 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                  <MdOutlineStorefront className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none w-5 h-5" />
+                  <div className="relative w-full">
+                    <input
+                      value={storeName}
+                      onChange={(e) => setStoreName(e.target.value)}
+                      type="name"
+                      placeholder="Enter your store name"
+                      className="pl-2 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                    <MdOutlineStorefront className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none w-5 h-5" />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ""
+              )}
 
-              <div className="mt-4 flex gap-3 justify-between">
-                <div className="w-1/2">
-                  <h1 className="mt-4 mb-2">Password</h1>
+              <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-between">
+                <div className="sm:w-1/2 w-full">
+                  <h1 className="mt-4 mb-2 font-bold">Password</h1>
                   <div className="relative w-full">
                     <input
                       value={password}
@@ -228,8 +251,8 @@ export default function SignUp() {
                     <RiLockPasswordLine className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none w-5 h-5" />
                   </div>
                 </div>
-                <div className="w-1/2">
-                  <h1 className="mt-4 mb-2">Confirm Password</h1>
+                <div className="sm:w-1/2 w-full">
+                  <h1 className="mt-4 mb-2 font-bold">Confirm Password</h1>
                   <div className="relative w-full">
                     <input
                       value={confirmPassword}
@@ -250,7 +273,7 @@ export default function SignUp() {
                 />
                 <label htmlFor="terms">Remember me</label>
               </div>
-              <button className="rounded-lg text-xl bg-blue-400 w-full mt-4 p-2 font-bold">
+              <button className="rounded-lg hover:shadow-blue-700 transition-colors shadow-xl text-xl bg-blue-400 w-full mt-4 p-2 font-bold">
                 Create Account{" "}
               </button>
             </form>
@@ -259,9 +282,26 @@ export default function SignUp() {
               <span className="mx-4 text-gray-500 text-sm font-medium">OR</span>
               <div className="flex-grow h-px bg-gray-300"></div>
             </div>
+            <div className="w-full">
+              <button
+                onClick={handleGoogle}
+                className="flex items-center justify-center gap-3 w-full rounded-lg border border-gray-200 p-3"
+              >
+                <Image
+                  src="/google.png"
+                  alt="google image"
+                  width={20}
+                  height={20}
+                />
+                <span className="text-2xl sm:text-xl"> Continue with google</span>
+              </button>
+            </div>
             <Link href="/login">
-              <p className=" text-black px-4 py-2 ">
-                Alredy have an account ? Go to login
+              <p className=" text-black px-4 py-2 text-center">
+                Already have an account?{" "}
+                <span className="font-bold text-green-400">
+                      Login In
+                </span>
               </p>
             </Link>
           </div>
