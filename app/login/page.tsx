@@ -89,7 +89,7 @@ export default function LoginPage() {
       router.push("/");
     }, 1000);
   };
-  const handleGoogle = async (e) => {
+  const handleGoogle = async (e:React.FormEvent) => {
     e.preventDefault();
     await supabase.auth.signInWithOAuth({
       provider: "google",

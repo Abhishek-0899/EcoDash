@@ -120,7 +120,7 @@ export default function SignUp() {
     }, 1000);
   };
 
-  const handleGoogle = async (e) => {
+  const handleGoogle = async (e:React.FormEvent) => {
     e.preventDefault();
     await supabase.auth.signInWithOAuth({
       provider: "google",
