@@ -84,10 +84,29 @@ export default function LoginPage() {
       toast.error("Failed to get user role: " + profileError.message);
       return;
     }
+    const roleFromDb = profileData?.role?.toLowerCase().trim();
+    const roleFromUi = selectedRole.toLowerCase();
+    if (!roleFromDb) {
+      router.push("/signup");
+      return;
+    }
+    if (roleFromDb !== roleFromUi) {
+      toast.error(
+        // `You selected ${selectedRole}, but this account is ${roleFromDb}`,
+`        This account is registered as a ${roleFromDb}. Please select the correct role.
+`      );
+      setLoading(false);
+      return;
+    }
     toast.success("Successfully logged in 🎉");
-    setTimeout(() => {
+
+    if (roleFromDb === "admin") {
+      router.push("/dashboard/admin");
+    } else if (roleFromDb === "seller") {
+      router.push("/dashboard/seller");
+    } else {
       router.push("/");
-    }, 1000);
+    }
   };
   const handleGoogle = async (e: React.FormEvent) => {
     e.preventDefault();

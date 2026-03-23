@@ -108,7 +108,7 @@ export default function SignUp() {
       setloading(false);
       return;
     }
-    const { data, error } = await supabase.auth.signUp({
+    const { data: profileData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -122,10 +122,18 @@ export default function SignUp() {
       toast.error(error.message);
     }
     toast.success("Signup successful 🎉");
-
-    setTimeout(() => {
+    const role = profileData?.user?.user_metadata?.role.toLowerCase()
+    console.log("role", role)
+    if (!role) {
+      router.push("/login");
+    }
+    if (role === "admin") {
+      router.push("/dashboard/admin");
+    } else if (role === "seller") {
+      router.push("/dashboard/seller");
+    } else {
       router.push("/");
-    }, 1000);
+    }
   };
 
   const handleGoogle = async (e: React.FormEvent) => {
