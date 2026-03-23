@@ -21,6 +21,8 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [storeName, setStoreName] = useState("");
 
+  const [loading, setloading] = useState(false);
+
   const rolesType = [
     {
       logo: MdAdminPanelSettings,
@@ -77,27 +79,33 @@ export default function SignUp() {
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("clicked");
+    setloading(true);
     e.preventDefault();
     if (!email || !password || !confirmPassword) {
       toast.error("Please fill all required fields");
+      setloading(false);
       return;
     }
     if (!email.includes("@")) {
       toast.error("Enter a valid email");
+      setloading(false);
       return;
     }
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
+      setloading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
+      setloading(false);
+
       return;
     }
     if (!storeName && selectedRole === "Seller") {
       toast.error("Store name required");
+      setloading(false);
       return;
     }
     const { data, error } = await supabase.auth.signUp({
@@ -120,7 +128,7 @@ export default function SignUp() {
     }, 1000);
   };
 
-  const handleGoogle = async (e:React.FormEvent) => {
+  const handleGoogle = async (e: React.FormEvent) => {
     e.preventDefault();
     await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -129,10 +137,6 @@ export default function SignUp() {
       },
     });
     toast.success("Signup successful 🎉");
-
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
   };
 
   return (
@@ -183,7 +187,7 @@ export default function SignUp() {
               account.
             </p>
             <h1 className="font-bold mt-4 mb-4">Choose account type</h1>
-            
+
             {/* roles */}
 
             <div className="grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -273,8 +277,18 @@ export default function SignUp() {
                 />
                 <label htmlFor="terms">Remember me</label>
               </div>
-              <button className="rounded-lg hover:shadow-blue-700 transition-colors shadow-xl text-xl bg-blue-400 w-full mt-4 p-2 font-bold">
-                Create Account{" "}
+              <button
+                type="submit"
+                disabled={loading}
+                className={`rounded-lg shadow-xl text-xl w-full mt-4 p-2 font-bold transition
+    ${
+      loading
+        ? "bg-blue-300 cursor-not-allowed"
+        : "bg-blue-400 hover:shadow-blue-700"
+    }
+  `}
+              >
+                {loading ? "Creating account..." : "Create Account"}
               </button>
             </form>
             <div className="flex items-center my-6">
@@ -293,15 +307,16 @@ export default function SignUp() {
                   width={20}
                   height={20}
                 />
-                <span className="text-2xl sm:text-xl"> Continue with google</span>
+                <span className="text-2xl sm:text-xl">
+                  {" "}
+                  Continue with google
+                </span>
               </button>
             </div>
             <Link href="/login">
               <p className=" text-black px-4 py-2 text-center">
                 Already have an account?{" "}
-                <span className="font-bold text-green-400">
-                      Login In
-                </span>
+                <span className="font-bold text-green-400">Login In</span>
               </p>
             </Link>
           </div>

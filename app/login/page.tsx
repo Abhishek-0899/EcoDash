@@ -89,7 +89,7 @@ export default function LoginPage() {
       router.push("/");
     }, 1000);
   };
-  const handleGoogle = async (e:React.FormEvent) => {
+  const handleGoogle = async (e: React.FormEvent) => {
     e.preventDefault();
     await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -98,10 +98,6 @@ export default function LoginPage() {
       },
     });
     toast.success("Signup successful 🎉");
-
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
   };
 
   return (
@@ -141,7 +137,7 @@ export default function LoginPage() {
         <div className="w-full md:w-1/2 bg-green-100 flex justify-center items-center p-6">
           <div className="rounded-2xl shadow-2xl backdrop-blur-md md:translate-y-[-80px] translate-y-[40px] bg-white/80 border border-white/40 flex flex-col p-10 max-w-md w-full">
             <h1 className="text-4xl font-bold mb-4 md:text-center">Login</h1>
-            <p className="mb-4">Choose your role and continue to dashboard</p>  
+            <p className="mb-4">Choose your role and continue to dashboard</p>
 
             {/* Role selection */}
             <div className="flex p-2 rounded-2xl bg-gray-200 items-center justify-between w-full mb-4">
@@ -198,7 +194,16 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="rounded-lg text-xl bg-blue-400 w-full mt-4 p-2 font-bold"
+                disabled={loading}
+                className={`
+                  
+                  rounded-lg text-xl bg-blue-400 w-full mt-4 p-2 font-bold
+                  ${
+                    loading
+                      ? "bg-blue-300 cursor-not-allowed"
+                      : "bg-blue-400 hover:shadow-blue-700"
+                  }
+                  `}
               >
                 {loading ? "Logging in..." : "Login"}
               </button>
@@ -220,7 +225,10 @@ export default function LoginPage() {
                   width={20}
                   height={20}
                 />
-                <span className="text-2xl sm:text-2xl"> Continue with google</span>
+                <span className="text-2xl sm:text-2xl">
+                  {" "}
+                  Continue with google
+                </span>
               </button>
             </div>
 
