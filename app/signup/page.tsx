@@ -123,7 +123,6 @@ export default function SignUp() {
     }
     toast.success("Signup successful 🎉");
     const role = profileData?.user?.user_metadata?.role.toLowerCase()
-    console.log("role", role)
     if (!role) {
       router.push("/login");
     }

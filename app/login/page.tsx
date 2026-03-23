@@ -92,9 +92,9 @@ export default function LoginPage() {
     }
     if (roleFromDb !== roleFromUi) {
       toast.error(
-        // `You selected ${selectedRole}, but this account is ${roleFromDb}`,
-`        This account is registered as a ${roleFromDb}. Please select the correct role.
-`      );
+        `        This account is registered as a ${roleFromDb}. Please select the correct role.
+`,
+      );
       setLoading(false);
       return;
     }
