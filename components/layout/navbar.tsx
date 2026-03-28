@@ -18,7 +18,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex gap-5 items-center">
-        <Wishlist />
+        <Wishlist/>
         <Cart />
         <Profile />
       </div>
