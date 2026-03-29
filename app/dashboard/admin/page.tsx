@@ -1,7 +1,7 @@
 "use client";
 
 import Category from "@/components/layout/category";
-import Navbar from "@/components/layout/navbar";
+import Navbar from "@/components/navbar/navbar";
 
 export default function AdminDashboard() {
   return (

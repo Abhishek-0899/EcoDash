@@ -1,9 +1,11 @@
 "use client";
 import Image from "next/image";
-import Search from "../search";
-import Wishlist from "../wishlist";
-import Cart from "../cart";
-import Profile from "../profile";
+import Search from "./search";
+import Wishlist from "./wishlist";
+import Profile from "./profileButton";
+import Link from "next/link";
+import Cart from "./cartButton";
+
 export default function Navbar() {
   return (
     // parent div
@@ -18,8 +20,13 @@ export default function Navbar() {
       </div>
 
       <div className="flex gap-5 items-center">
-        <Wishlist/>
-        <Cart />
+        <Link href="/wishlist">
+          <Wishlist />
+        </Link>
+        <Link href="/cart">
+          <Cart />
+        </Link>
+
         <Profile />
       </div>
     </div>

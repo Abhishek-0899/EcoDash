@@ -9,10 +9,11 @@ export default function Profile() {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const item = [
+    { label: "Profile", href: "/profile" },
     { label: "Order", href: "/order" },
     { label: "Cart", href: "/cart" },
     { label: "Wishlist", href: "/wishlist" },
-    { label: "Logout", href: "/login", isLogOut: true },
+    { label: "Logout", href: "/auth/login", isLogOut: true },
   ];
 
   // outside click
