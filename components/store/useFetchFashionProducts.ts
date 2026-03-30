@@ -9,5 +9,12 @@ export const useFashionProducts = () => {
       if (!res.ok) throw new Error("Failed to fetch fashion products");
       return res.json();
     },
+
+    // ⭐⭐ IMPORTANT ⭐⭐
+    staleTime: 1000 * 60 * 5,        // 5 minutes no refetching
+    cacheTime: 1000 * 60 * 10,       // keep in memory for 10 minutes
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };
