@@ -8,7 +8,7 @@ export default function Category() {
   const ListCategory = [
     {
       label: "Fashion",
-      href: "/fashion",
+      href: "/catalog/fashion",
       icon: <Image src={"/fashion.png"} height={25} width={25} alt="fashion" />,
     },
     {
