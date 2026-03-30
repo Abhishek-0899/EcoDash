@@ -51,7 +51,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button onClick={() => setOpen(!open)}>
         <FaUserCircle className="w-9 h-9 cursor-pointer" />
       </button>
