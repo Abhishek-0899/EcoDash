@@ -41,7 +41,7 @@ export default function Category() {
   ];
 
   return (
-    <div className=" shadow-xl mt-9 px-4">
+    <div className="shadow-xl p-2">
       <ul className="flex justify-between w-full text-lg">
         {ListCategory.map(({ label, href, icon }) => (
           <li

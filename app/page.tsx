@@ -1,128 +1,107 @@
 "use client";
+import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 import Category from "@/components/layout/category";
 import Navbar from "@/components/navbar/navbar";
 import { useFashionProducts } from "@/components/store/useFetchFashionProducts";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { AiFillRightCircle, AiFillLeftCircle } from "react-icons/ai";
-
-interface FashionItem {
-  id: number;
-  image: string;
-  title: string;
-}
+import { useRef, useState } from "react";
 
 export default function Home() {
   const { data, isLoading, error } = useFashionProducts();
-  const [startIdx, setStartIdx] = useState(0);
-  const [bounce, setBounce] = useState(false);
-
-  const displayCount = 10;
-  const endIdx = startIdx + displayCount;
-
-  const items = data ?? [];
-  const isLastSlide = endIdx >= items.length;
-  console.log(isLastSlide, startIdx, endIdx);
-
-  const handlePrev = () => {
-    if (startIdx === 0) {
-      triggerBounce();
-      return;
-    }
-    setStartIdx((prev) => prev - 1);
-  };
-
-  const handleNext = () => {
-    if (isLastSlide) {
-      triggerBounce();
-      return;
-    }
-    setStartIdx((prev) => prev + 1);
-  };
-
-  const triggerBounce = () => {
-    setBounce(true);
-    setTimeout(() => setBounce(false), 200);
-  };
-
-  const visibleProducts = items.slice(startIdx, endIdx);
-
+  const [items, setItems] = useState(0);
   if (isLoading) return <p>Loading Fashion...</p>;
   if (error) return <p>Error loading products...</p>;
+  // const rowRef = useRef(null);
+  
+  const fashionData = data?.products ?? [];
+  // show only first 15 products
+  const limitedData = fashionData.slice(0, 15);
+
+  const displayCount = 9;
+
+  // slice based on items index
+  const featureProducts = limitedData.slice(items, items + displayCount);
+
+  // maximum index you can scroll to
+  const maxIndex = limitedData.length - displayCount;
+
+  // const cardWidth = 180; // adjust based on your card's width
+
+  // const handleNext = () => {
+  //   if (rowRef.current) {
+  //     rowRef.current.scrollLeft += cardWidth;
+  //   }
+  // };
+
+  // const handlePrev = () => {
+  //   if (rowRef.current) {
+  //     rowRef.current.scrollLeft -= cardWidth;
+  //   }
+  // };
+  const handleNext = () => {
+    setItems((prev) => Math.min(prev + 1, maxIndex));
+  };
+  const handlePrev = () => {
+    setItems((prev) => Math.max(prev - 1, 0));
+  };
 
   return (
     <>
       <Navbar />
+      <Category />
 
-      <div className="px-5">
-        <Category />
-
-        <div className="flex items-center ml-8 mt-7 mb-3 gap-7">
-          <h1 className="text-2xl font-heading ">Fashion</h1>
-          <button className="rounded-xl p-1 border-2 bg-amber-100">
-            <Link href={"/catalog/fashion"}>
-              <h1 className="text-xl text-blue-700">See more...</h1>
-            </Link>
-          </button>
+      <div className="px-4 py-6">
+        <div className="mb-4 flex items-center gap-3">
+          <h1 className="text-2xl font-semibold">Fashion</h1>
+          <Link
+            href="/catalog/fashion"
+            className="text-xl text-blue-500 hover:text-blue-900"
+          >
+            See more
+          </Link>
         </div>
 
-        <div className="relative flex items-center justify-center">
-          {/* FADE LEFT */}
-          <div
-            className="pointer-events-none absolute left-0 top-0 h-full w-20
-            bg-gradient-to-r from-white to-transparent z-10"
-          ></div>
-
-          {/* FADE RIGHT */}
-          <div
-            className="pointer-events-none absolute right-0 top-0 h-full w-20
-            bg-gradient-to-l from-white to-transparent z-10"
-          ></div>
-
-          {/* LEFT BUTTON */}
+        <div className="relative flex items-center">
           <button
-            className="absolute -left-5 text-3xl z-20"
-            hidden={startIdx === 0}
+            hidden={items === 0}
+            type="button"
             onClick={handlePrev}
+            className="absolute left-0 z-10 rounded-full bg-white text-gray-700 shadow-md cursor-pointer"
+            aria-label="Previous products"
           >
-            <AiFillLeftCircle size={50} />
+            <AiFillLeftCircle size={40} />
           </button>
 
-          {/* SLIDER */}
-          <div className="overflow-hidden w-full">
-            <div
-              className={`
-                flex gap-4 transition-transform duration-300 ease-out
-                ${bounce ? "animate-[wiggle_0.2s_ease]" : ""}
-              `}
-            >
-              {visibleProducts.map((item: FashionItem) => (
-                <div
-                  key={item.id}
-                  className="border p-4 rounded-lg flex justify-center shrink-0"
-                >
-                  <div className="w-24 h-24 flex items-center mr-5 justify-center bg-white rounded-lg overflow-hidden">
-                    <Image
-                      src={item.image}
-                      width={80}
-                      height={80}
-                      alt={item.title}
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div
+            // ref={rowRef}
+            className="mx-12 flex gap-4 "
+          >
+            {featureProducts.map((prod) => (
+              <div
+                key={prod.id}
+                className="min-w-[160px] rounded-lg border p-3 text-center shadow-sm"
+              >
+                <Image
+                  height={140}
+                  width={140}
+                  alt={prod.title}
+                  src={prod.images[0]}
+                  className="mx-auto mb-3 h-35 w-35 rounded-md object-cover"
+                />
+                <h1 className="text-sm font-medium">{prod.title}</h1>
+              </div>
+            ))}
           </div>
 
-          {/* RIGHT BUTTON */}
           <button
-            className="absolute right-0 text-3xl z-20"
-            hidden={isLastSlide}
             onClick={handleNext}
+            type="button"
+            hidden={items >= maxIndex}
+            className="absolute right-0 z-10 rounded-full bg-white text-gray-700 shadow cursor-pointer"
+            aria-label="Next products"
           >
-            <AiFillRightCircle size={50} />
+            <AiFillRightCircle size={40} />
           </button>
         </div>
       </div>

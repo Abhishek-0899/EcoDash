@@ -1,55 +1,59 @@
 "use client";
-
 import Navbar from "@/components/navbar/navbar";
 import { useFashionProducts } from "@/components/store/useFetchFashionProducts";
 import Image from "next/image";
 
-interface FashionItem {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-  category: string;
-}
-
 export default function FashionPage() {
   const { data, isLoading, error } = useFashionProducts();
 
+  const prod = data?.products || [];
+
+  console.log(prod);
+
+  const filterData = prod.filter((item: any) => {
+    const c = item.category?.toLowerCase?.() || "";
+    return (
+      (c.includes("men") || c.includes("women")) &&
+      // !c.includes("watches") &&
+      // !c.includes("shoes") &&
+      // !c.includes("bags")
+
+
+       (c.includes("men") || c.includes("women")) 
+    );
+  });
   if (isLoading) return <p>Loading Fashion...</p>;
   if (error) return <p>Error loading products</p>;
-const categories = data ? [...new Set(data.map((item: FashionItem) => item.category))] : [];
-console.log(categories)
-  // const keywords = ["men", "man", "women", "woman", "mens", "womens"];
-  const keywords = ['men\'s clothing', 'women\'s clothing'];
-
-  const fashionItems = data?.filter((item: FashionItem) => {
-    const txt = JSON.stringify(item).toLowerCase();
-    return keywords.some((k) => txt.includes(k));
-  });
-// men's clothing,jewelery,electronics,women's clothing
-  console.log(fashionItems);
 
   return (
     <>
       <Navbar />
-
-      <div className="p-4 grid grid-cols-2 gap-4">
-        {fashionItems?.map((item: FashionItem) => (
-          <div key={item.id} className="border p-4 rounded-lg">
-            <div className="w-20 h-20 flex gap-6 items-center justify-center overflow-hidden">
-              <Image
-                src={item.image}
-                width={80}
-                height={80}
-                alt={item.title}
-                className="object-contain"
-              />
-              {/* <p className="text-xl">{item.title}</p>
-              <p className="text-xl">{item.price}</p> */}
+      <div className="grid grid-cols-5 items-center">
+        {filterData.length ? (
+          filterData.map((p: any) => (
+            <div key={p.id} style={{ marginBottom: "20px" }}>
+              <p>{p.title}</p>
+              <Image src={p.images[0]} width={80} height={80} alt="img"/>
+              {/* <p>{p.title}</p>
+              <Image src={p.thumbnail} width={80} height={80} /> */}
+              {/* Show all product images */}
+              {/* <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {p.images.map((img: string, i: number) => (
+                  <Image
+                    key={i}
+                    src={img}
+                    width={80}
+                    height={80}
+                    alt={`${p.title} image ${i}`}
+                    style={{ borderRadius: 8 }}
+                  />
+                ))}
+              </div> */}
             </div>
-      
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No products found.</p>
+        )}
       </div>
     </>
   );
