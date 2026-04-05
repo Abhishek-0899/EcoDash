@@ -23,7 +23,7 @@ export default function Category() {
     },
     {
       label: "Electronics",
-      href: "/electronics",
+      href: "/catalog/electronics",
       icon: (
         <Image
           src={"/electronic.png"}

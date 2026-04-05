@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 interface FashionStoreState {
   selectedCategory: string;
-  setSelectedCategory: (cat: string) => void;
+  setSelectedCategory: (fashion: string) => void;
 }
 
 export const useFashionStore = create<FashionStoreState>((set) => ({

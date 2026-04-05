@@ -11,10 +11,11 @@ export default function Navbar() {
     // parent div
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center gap-2">
-        <Image src="/logoId.png" width={50} height={50} alt="plng" />
-        <h1 className="text-xl font-bold">Ecodash</h1>
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logoId.png" width={50} height={50} alt="Ecodash logo" />
+          <h1 className="text-xl font-bold">Ecodash</h1>
+        </Link>
       </div>
-
       <div className="flex-1 mx-4">
         <Search />
       </div>
