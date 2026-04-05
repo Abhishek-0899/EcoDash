@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/navbar/navbar";
 import { useFashionProducts } from "@/components/store/useFetchFashionProducts";
+import StarRating from "@/components/StarRating";
 import Image from "next/image";
 
 interface Product {
@@ -9,6 +10,7 @@ interface Product {
   price: number;
   images: string[];
   category: string;
+  rating: string;
 }
 
 export default function FashionPage() {
@@ -33,16 +35,31 @@ export default function FashionPage() {
   return (
     <>
       <Navbar />
-      <div className="grid grid-cols-5 items-center p-4 gap-4">
+      <div
+       className="grid grid-cols-5 items-center p-4 gap-4"
+       >
         {filterData.length ? (
           filterData.map((p: Product) => (
             <div
               key={p.id}
               style={{ marginBottom: "20px" }}
-              className="flex flex-col rounded-xl border-2 items-center shadow-2xl"
+              className="flex items-center flex-col border-2 rounded-xl shadow-xl transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:border-blue-800"
             >
-              <p className="font-stretch-50% font-extrabold text-xl">{p.title}</p>
-              <Image src={p.images[0]} height={300} width={300} alt="img" />
+              <p className="font-stretch-50% font-extrabold text-xl">
+                {p.title}
+              </p>
+              <div className="flex items-center justify-between bg-gray-100 rounded-md">
+                <Image
+                  src={p.images[0]}
+                  width={300}
+                  height={300}
+                  alt="img"
+                  className="object-contain"
+                  blurDataURL="/placeholder.png"
+                  loading="lazy"
+                />
+              </div>
+              <StarRating rating={p.rating} />
               <p className="font-bold text-xl">{`${p.price} $ `}</p>
             </div>
           ))

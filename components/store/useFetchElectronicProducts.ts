@@ -1,13 +1,13 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 
-export const useMobileProducts = () => {
+export const useElectronicProducts = () => {
   return useQuery({
-    queryKey: ["MobileProducts"],
+    queryKey: ["ElectonicProducts"],
 
     queryFn: async () => {
       const res = await fetch(
-        "https://dummyjson.com/products/category/smartphones?limit=200"
+        "https://dummyjson.com/products/category/laptops?limit=200"
         
       );
 

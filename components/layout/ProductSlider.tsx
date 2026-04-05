@@ -57,16 +57,16 @@ export default function ProductSlider({ title, href,products}: SliderProps) {
 
           <div
             ref={rowRef}
-            className="mx-12 flex gap-4 overflow-x-hidden hover:overflow-x-auto scroll-smooth"
+            className="mx-12 flex gap-4 overflow-x-auto hover:overflow-x-auto scroll-smooth"
           >
             {products.map((prod: Products) => (
               <div
                 key={prod.id}
-                className="min-w-40 rounded-lg border p-3 text-center shadow-sm"
+                className="min-w-40 min-h-auto rounded-lg border p-3 text-center shadow-sm"
               >
                 <Image
-                  height={140}
-                  width={140}
+                  height={200}
+                  width={200}
                   alt={prod.title}
                   src={prod.images[0]}
                   className="mx-auto mb-3 h-35 w-35 rounded-md object-cover"

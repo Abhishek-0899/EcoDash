@@ -87,7 +87,7 @@ export default function LoginPage() {
     const roleFromDb = profileData?.role?.toLowerCase().trim();
     const roleFromUi = selectedRole.toLowerCase();
     if (!roleFromDb) {
-      router.push("/signup");
+      router.push("/auth/signup");
       return;
     }
     if (roleFromDb !== roleFromUi) {
@@ -154,7 +154,7 @@ export default function LoginPage() {
 
         {/* Right side (login) */}
         <div className="w-full md:w-1/2 bg-green-100 flex justify-center items-center p-6">
-          <div className="rounded-2xl shadow-2xl backdrop-blur-md md:translate-y-[-80px] translate-y-[40px] bg-white/80 border border-white/40 flex flex-col p-10 max-w-md w-full">
+          <div className="rounded-2xl shadow-2xl backdrop-blur-md md:-translate-y-20 translate-y-10 bg-white/80 border border-white/40 flex flex-col p-10 max-w-md w-full">
             <h1 className="text-4xl font-bold mb-4 md:text-center">Login</h1>
             <p className="mb-4">Choose your role and continue to dashboard</p>
 
@@ -229,9 +229,9 @@ export default function LoginPage() {
             </form>
 
             <div className="flex items-center my-6">
-              <div className="flex-grow h-px bg-gray-300"></div>
+              <div className="grow h-px bg-gray-300"></div>
               <span className="mx-4 text-gray-500 text-sm font-medium">OR</span>
-              <div className="flex-grow h-px bg-gray-300"></div>
+              <div className="grow h-px bg-gray-300"></div>
             </div>
             <div className="w-full">
               <button
@@ -251,7 +251,7 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <Link href="/signup">
+            <Link href="/auth/signup">
               <p className="text-black px-4 py-2 text-center">
                 Create an account?{" "}
                 <span className="text-green-500">SignUp</span>

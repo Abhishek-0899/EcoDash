@@ -3,11 +3,11 @@ import Category from "@/components/layout/category";
 import ProductSlider from "@/components/layout/ProductSlider";
 import Navbar from "@/components/navbar/navbar";
 import { useFashionProducts } from "@/components/store/useFetchFashionProducts";
-import { useMobileProducts } from "@/components/store/useFetchMobileProducts";
+import { useElectronicProducts } from "@/components/store/useFetchElectronicProducts";
 
 export default function Home() {
   const { data: fashionData, isLoading, error } = useFashionProducts();
-  const {data:Electronis, isLoading: isLoadingMobile, error: errorMobile} = useMobileProducts()
+  const {data:Electronis, isLoading: isLoadingMobile, error: errorMobile} = useElectronicProducts()
 
 const loading = isLoading || isLoadingMobile
 const errorState = error ||  errorMobile
