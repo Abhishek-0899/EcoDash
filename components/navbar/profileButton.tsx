@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
 
   const item = [
@@ -18,8 +18,8 @@ export default function Profile() {
 
   // outside click
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     }
@@ -29,7 +29,7 @@ export default function Profile() {
   }, []);
 
   // keyboard navigation
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: { key: string; }) => {
     if (!open) return;
 
     if (e.key === "ArrowDown") {
