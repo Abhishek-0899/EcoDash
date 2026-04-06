@@ -15,14 +15,13 @@ interface CartState {
   increaseItem: (id: number) => void;
   decreaseItem: (id: number) => void;
   deleteItem: (id: number) => void;
-  getTotaLQuantity: (id: number) => void;
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
   cart: [],
 
   addToCart: (product) => {
-    const cart = get().cart;
+    const cart = get().cart;  
     const existing = cart.find((item) => item.id === product.id);
     if (existing) {
       existing.quantity += 1;
@@ -71,7 +70,5 @@ export const useCartStore = create<CartState>((set, get) => ({
     const updated = cart.filter((item) => item.id !== id);
     set({ cart: updated });
   },
-  getTotaLQuantity: () => {
-    return get().cart.reduce((total, item) => item.quantity + total, 0);
-  },
+
 }));
