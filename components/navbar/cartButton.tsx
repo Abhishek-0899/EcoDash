@@ -1,18 +1,15 @@
 "use client";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useCartStore } from "@/components/store/useCartStore";
-
+import { useCartStore } from "../store/useCartStore";
 export default function Cart() {
-  const total = useCartStore((s) => s.getTotalItems());
-
+  const getTotaLQuantity = useCartStore((s) => s.getTotaLQuantity());
   return (
-    <div>
+    <div className="">
       <div className="relative flex justify-between items-center rounded-lg gap-2 border-2 px-2 py-1">
         <AiOutlineShoppingCart size={30} />
-
-        {total > 0 && (
+        {getTotaLQuantity > 0 && (
           <p className="absolute right-0 top-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
-            {total}
+            {getTotaLQuantity}
           </p>
         )}
       </div>

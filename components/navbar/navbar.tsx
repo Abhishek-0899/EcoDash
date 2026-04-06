@@ -9,7 +9,7 @@ import Cart from "./cartButton";
 export default function Navbar() {
   return (
     // parent div
-    <div className="flex items-center justify-between p-4">
+    <div className="flex items-center justify-between p-4 sticky top-0 z-50 shadow-md bg-white">
       <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logoId.png" width={50} height={50} alt="Ecodash logo" />
