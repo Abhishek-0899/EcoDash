@@ -47,6 +47,9 @@ export default function ElectronicsPage() {
               </div>
               <StarRating rating={item.rating} />
               <p className="font-bold mt-2">{`${item.price} $`}</p>
+              <button className="w-full bg-yellow-500 rounded-xl text-2xl font-bold mt-4 p-3">
+                Add To cart
+              </button>
             </Link>
           ))
         ) : (
