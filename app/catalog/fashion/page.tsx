@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AddtoCartButton from "@/components/AddToCartButton";
 import WishlistButton from "@/components/WishListButton";
+import { FashionPageSkeleton } from "@/components/FashionLayout/FashionPageSkeleton";
 interface Product {
   id: number;
   title: string;
@@ -28,7 +29,7 @@ export default function FashionPage() {
       !c.includes("bags")
     );
   });
-  if (isLoading) return <p>Loading Fashion...</p>;
+  if (isLoading) return <p><FashionPageSkeleton/></p>;
   if (error) return <p>Error loading products</p>;
 
   return (
