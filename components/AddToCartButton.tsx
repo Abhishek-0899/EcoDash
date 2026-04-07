@@ -1,7 +1,7 @@
 "use client";
 
 import { AiTwotoneDelete } from "react-icons/ai";
-import { useCartStore } from "./store/useCartStore";
+import { useCartStore } from "../store/useCartStore";
 
 interface AddToCartButtonProps {
   id: number;

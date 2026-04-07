@@ -2,8 +2,8 @@
 import Category from "@/components/layout/category";
 import ProductSlider from "@/components/layout/ProductSlider";
 import Navbar from "@/components/navbar/navbar";
-import { useFashionProducts } from "@/components/store/useFetchFashionProducts";
-import { useElectronicProducts } from "@/components/store/useFetchElectronicProducts";
+import { useElectronicProducts } from "@/store/useFetchElectronicProducts";
+import { useFashionProducts } from "@/store/useFetchFashionProducts";
 
 export default function Home() {
   const { data: fashionData, isLoading, error } = useFashionProducts();

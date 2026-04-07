@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import Navbar from "@/components/navbar/navbar";
-import { useElectronicProducts } from "@/components/store/useFetchElectronicProducts";
+import { useElectronicProducts } from "@/store/useFetchElectronicProducts";
 import StarRating from "@/components/StarRating";
 import Image from "next/image";
 import AddtoCartButton from "@/components/AddToCartButton";
+import WishlistButton from "@/components/WishListButton";
 
 interface Product {
   rating: number;
@@ -30,10 +31,11 @@ export default function ElectronicsPage() {
           products.map((item: Product) => (
             <div
               key={item.id}
-              className="flex flex-col items-center border-2 rounded-xl shadow-xl p-4 transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-800"
+              className="relative flex flex-col items-center border-2 rounded-xl shadow-xl p-4 transition-transform duration-300 hover:scale-105 hover:border-blue-800"
             >
-              <p className="font-bold text-center">{item.id}</p>
-              <p className="font-bold text-center">{item.title}</p>
+              <div className="absolute top-1 right-1">
+                <WishlistButton id={item.id} />
+              </div>
               <Link
                 href={`/catalog/electronics/${item.id}`}
                 className="flex items-center justify-center bg-gray-100 rounded-md p-2"
@@ -48,6 +50,7 @@ export default function ElectronicsPage() {
                   loading="lazy"
                 />
               </Link>
+              <p className="font-bold text-center">{item.title}</p>
               <StarRating rating={item.rating} />
               <p className="font-bold mt-2">{`${item.price} $`}</p>
               <AddtoCartButton
